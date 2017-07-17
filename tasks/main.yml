@@ -5,14 +5,21 @@
 - include: RedHat.yml
   when: ansible_os_family == 'RedHat'
 
-- name: Ensure that zookeeper has started
+- name: Start Zookeeper
+  service: name=zookeeper state=started enabled=yes
+  tags: deploy
+
+- name: Ensure that Zookeeper has started and keeps running
   service: name=zookeeper state=started
   tags: deploy
-  register: zooker_running
+  register: zookeeper_running
+  until: zookeeper_running.state == 'started' and not zookeeper_running|changed
+  retries: 2
+  delay: 5
 
-- name: Validate that zookeeper has started
+- name: Validate that Zookeeper is running
   fail:
     msg: >
-      Zookeeper has not started as expected, please check its current status or error messages
-  when: zooker_running|changed
+      Service zookeeper has not started as expected, please check its current status or error messages
+  when: zookeeper_running.state != 'started' or zookeeper_running|changed
   tags: deploy
