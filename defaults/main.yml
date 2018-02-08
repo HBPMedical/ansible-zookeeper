@@ -1,7 +1,8 @@
 ---
-ansible_playbook_version: 0.1
-zookeeper_playbook_version: "0.0.3"
-zookeeper_version: 3.4.6
+zookeeper_version: 3.4.8
+zookeeper_debian_package_version: "1"
+zookeeper_debian_version: "{{ zookeeper_version }}-{{ zookeeper_debian_package_version }}"
+
 zookeeper_url: http://www.us.apache.org/dist/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz
 
 apt_cache_timeout: 3600
@@ -14,7 +15,7 @@ tick_time: 2000
 zookeeper_id: 1
 data_dir: /var/lib/zookeeper
 log_dir: /var/log/zookeeper
-zookeeper_dir: /opt/zookeeper-{{zookeeper_version}}
+zookeeper_dir: "{% if ansible_os_family == 'Debian' %}/usr/share/zookeeper{% else %}/opt/zookeeper-{{zookeeper_version}}{% endif %}"
 
 # List of dict (i.e. {zookeeper_hosts:[{host:,id:},{host:,id:},...]})
 zookeeper_hosts:

@@ -1,0 +1,6 @@
+---
+
+ansible_playbook_version: 0.1
+zookeeper_playbook_version: "0.1.0"
+
+...
