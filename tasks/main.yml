@@ -1,8 +1,8 @@
 ---
-- include: Debian.yml
+- include_tasks: Debian.yml
   when: ansible_os_family == 'Debian'
 
-- include: RedHat.yml
+- include_tasks: RedHat.yml
   when: ansible_os_family == 'RedHat'
 
 - name: Start Zookeeper
@@ -13,7 +13,7 @@
   service: name=zookeeper state=started
   tags: deploy
   register: zookeeper_running
-  until: zookeeper_running.state == 'started' and not zookeeper_running|changed
+  until: zookeeper_running.state == 'started' and not zookeeper_running is changed
   retries: 2
   delay: 5
 
@@ -21,5 +21,5 @@
   fail:
     msg: >
       Service zookeeper has not started as expected, please check its current status or error messages
-  when: zookeeper_running.state != 'started' or zookeeper_running|changed
+  when: zookeeper_running.state != 'started' or zookeeper_running is changed
   tags: deploy
